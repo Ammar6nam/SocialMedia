@@ -40,10 +40,6 @@ def user_login(request):
         'form':form
     })
 
-def user_logout(request):
-    logout(request)
-    return render (request,'users/logout.html')
-
 
 @login_required
 def index (request):
