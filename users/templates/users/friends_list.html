@@ -1,0 +1,12 @@
+<!-- friendships/list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Friendships</h1>
+  <ul>
+    {% for friendship in object_list %}
+      <li>{{ friendship }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+

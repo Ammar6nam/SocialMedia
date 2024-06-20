@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Friendship, Follow
 
 
 class UserEditForm(forms.ModelForm):
@@ -11,7 +11,7 @@ class UserEditForm(forms.ModelForm):
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model=Profile
-        fields=('profile_picture',)
+        fields=('photo',)
 
 
 class LoginForm(forms.Form):
@@ -28,7 +28,18 @@ class UserRegistrationForm(forms.ModelForm):
         fields={'username','email','first_name'}
 
     def check_password(self):
-        ch_pass=self.cleaned_data
-        if ch_pass['password'] != ch_pass['password2']:
-            raise forms.ValidationError("Passwords don't match.")
-        return self.cleaned_data['password2']
+        cd = self.cleaned_data
+        if cd["password"] != self.cleaned_data['password2']:
+            raise forms.ValidationError('Passwords do not match')
+        return cd['password2']
+    
+
+class FriendshipForm(forms.ModelForm):
+    class Meta:
+        model = Friendship
+        fields = ('to_user',)
+
+class FollowForm(forms.ModelForm):
+    class Meta:
+        model = Follow
+        fields = ('to_user',)

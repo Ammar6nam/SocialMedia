@@ -1,19 +1,45 @@
+{% extends "users/base.html" %}
+{% block body %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login </title>
+    <title>Login</title>
 </head>
+<h1 class = "text-2xl m-10">Login user</h1>
 <body>
-    <form method='POST'>
+    <div class="container py-5">
+    
+    <form method="post" class = "bg-white shadow-md m-10 w-2/5 rounded px-8 pt-6 pb-8 mb-4" action="{% url 'login' %}">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit">
+        <div class="mb-2">
+            <label class = "block text-gray-700 text-sm font-bold mb-2" for="">Username</label>
+            <div class = "shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10">{{ form.username }}</div>
+        </div>
+        <div class="mb-2">
+            <label class = "block text-gray-700 text-sm font-bold mb-2" for="">Password</label>
+            <div class = "shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10">{{ form.password }}</div>
+        </div>
+        
+        
+        <button class="text-white bg-green-500 px-5 py-2" type="submit">Login</button>
     </form>
-    Did you forget your password? you can 
-    <a href= {% url 'password_reset' %} >Reset Password</a>
-    <p></p>
-    <a href= {% url 'register' %} >Register</a>
+    </div>
+    
+    <p class="px-10 py-10"><a class="text-indigo-500" href="{% url 'password_reset' %}">
+        <button type="button">Forgot password? Click here to reset</button>
+    </a></p>
+
+    {% if form.errors %}
+    <div class="errors">
+        {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
 </body>
 </html>
+{% endblock %}

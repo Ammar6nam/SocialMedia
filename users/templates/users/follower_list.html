@@ -1,0 +1,11 @@
+<!-- follows/list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Follows</h1>
+  <ul>
+    {% for follow in object_list %}
+      <li>{{ follow }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

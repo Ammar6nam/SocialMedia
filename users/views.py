@@ -1,10 +1,12 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate,login,logout
-from django.http import HttpResponse
-from .forms import LoginForm , UserRegistrationForm,UserEditForm, ProfileEditForm
+from django.shortcuts import render, redirect
+from .forms import LoginForm, UserRegistrationForm, FriendshipForm, FollowForm
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Profile
+from .models import Profile, Friendship, Follow
+from .forms import UserEditForm, ProfileEditForm
 from posts.models import Post
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, CreateView
 
 
 # Create your views here.
@@ -80,6 +82,38 @@ def edit(request):
         'user_form':user_form, 'profile_form':profile_form
     })
 
+
+class FriendshipListView(LoginRequiredMixin, ListView):
+    model = Friendship
+    template_name = 'friendships/friends_list.html'
+
+    def get_queryset(self):
+        return Friendship.objects.filter(from_user=self.request.user)
+
+class CreateFriendshipView(LoginRequiredMixin, CreateView):
+    model = Friendship
+    form_class = FriendshipForm
+    template_name = 'friendships/friends_create.html'
+
+    def form_valid(self, form):
+        form.instance.from_user = self.request.user
+        return super().form_valid(form)
+
+class FollowListView(LoginRequiredMixin, ListView):
+    model = Follow
+    template_name = 'follows/follower_list.html'
+
+    def get_queryset(self):
+        return Follow.objects.filter(from_user=self.request.user)
+
+class CreateFollowView(LoginRequiredMixin, CreateView):
+    model = Follow
+    form_class = FollowForm
+    template_name = 'follows/follower_create.html'
+
+    def form_valid(self, form):
+        form.instance.from_user = self.request.user
+        return super().form_valid(form)
 
 
 

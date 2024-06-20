@@ -1,0 +1,125 @@
+{% extends 'users/base.html' %}
+{% load mathfilters %}
+{% load static %}
+{% block body %}
+
+<!-- <div class="flex mt-5 p-10 justify-center">
+    <h2 class="text-3xl font-normal mb-2 text-gray-500">All Posts</h2>
+</div>
+<div class="grid grid-cols-1 gap-6 mx-auto p-10">
+    {% for post in posts %}
+    <a href="#" class="flex flex-col items-center">
+        <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
+            <div class="user-container flex mx-5 my-5">
+                <img class="h-10 w-10 rounded-full ml-2" src="{{ profile.photo.url }}" alt="User Profile Photo">
+                <div class="mx-2 my-2 font-bold"><span class="text-indigo-500">{{ post.user }}</span></div>
+            </div>
+            <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full">
+        </div>
+        <div class="px-6 py-4">
+            <div class="icon-container flex gap-3 justify-start">
+                <img class="w-6 h-6 ml-2" src="{% static 'users/images/whitelike.png'%}" alt="like-button">
+                <img class="w-6 h-6 ml-2" src="{% static 'users/images/comment.png'%}" alt="comment-button">
+                <img class="w-6 h-6 ml-2" src="{% static 'users/images/share.png'%}" alt="share-button">
+            </div>
+        </div>
+        <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">{{post.title}}</div>
+            <p class="text-gray-700 text-base">{{post.caption}}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div> -->
+
+
+<div class="flex mt-5 p-10 justify-center">
+    <h2 class="text-2xl font-normal mb-2 text-gray-500">All Posts</h2>
+</div>
+<div class="grid grid-cols-1 gap-6 mx-auto p-10">
+    {% for post in posts %}
+    <div id="{{ post.id }}" class="flex flex-col items-center post-item">
+        <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
+            <div class="user-container flex mx-5 my-5">
+                <img class="h-10 w-10 rounded-full ml-2" src="{{ post.user.profile.photo.url }}" alt="User Profile Photo">
+                <div class="my-2 font-bold"><span class="text-indigo-500">{{ post.user }}</span></div>
+            </div>
+            <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full">
+        </div>
+        <div class="px-6 py-4">
+            <div class="icon-container flex gap-3 justify-start">
+                <a class="btn-like" data-post-id="{{ post.id }}">
+                    {% if logged_user in post.liked_by.all %}
+                        <img class="w-6 h-6 ml-2 like-icon" src="{% static 'users/images/redlike.png' %}" alt="like-button">
+                    {% else %}
+                        <img class="w-6 h-6 ml-2 like-icon" src="{% static 'users/images/whitelike.png' %}" alt="liked-button">
+                    {% endif %}
+                </a>
+                
+                <img class="w-6 h-6 ml-2" src="{% static 'users/images/comment.png' %}" alt="comment-button">
+                <img class="w-6 h-6 ml-2" src="{% static 'users/images/share.png' %}" alt="share-button">
+            </div>
+        </div>
+        <div>
+            {% if post.liked_by.count < 1 %}
+            {% elif post.liked_by.count == 1 %}
+            {{ post.liked_by.first }} likes this
+            {% elif post.liked_by.count > 1 %}
+            {{ post.liked_by.first }} & {{ post.liked_by.count|sub:1 }} others like this
+            {% endif %}
+        </div>
+        <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">{{ post.title }}</div>
+            <p class="text-gray-700 text-base">{{ post.caption }}</p>
+        </div>
+
+        <div class="py-5">
+            {% for comment in post.comments.all %}
+                <span class="font-bold text-gray-800">{{ comment.posted_by }}</span>
+                <p class="text-xs text-gray-600">{{ comment.body }}</p>
+                <br>
+            {% endfor %}
+        </div>
+        <div class="px-5 py-5 pl-2 flex items-center">
+            <form action="" method="post" class="bg-white rounded">
+                {% csrf_token %}
+                <div class="flex">
+                    <div class="border rounded mr-10 text-gray-700">
+                        {{ comment_form.body }}
+                    </div>
+                    <input type="hidden" name="post_id" id="post_id" value="{{ post.id }}">
+                    <button class="bg-green-500 text-white px-5 pl-2" type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(document).on('click', '.btn-like', function(){
+            var post_id = $(this).data('postId');  // Using data-post-id attribute
+            var likeIcon = $(this).find('.like-icon');
+            $.ajax({
+                method: "POST",
+                url: "/posts/like",  // Update this URL to match your like URL pattern
+                data: {
+                    post_id: post_id, 
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    if (data.liked) {
+                        likeIcon.attr('src', '{% static "users/images/redlike.png" %}');
+                    } else {
+                        likeIcon.attr('src', '{% static "users/images/whitelike.png" %}');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error liking post:', error);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
