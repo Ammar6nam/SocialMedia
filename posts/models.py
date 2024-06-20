@@ -5,18 +5,31 @@ from django.utils.text import slugify
 # Create your models here.
 
 class Post(models.Model):
-    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    image=models.ImageField(upload_to='images/%Y/%m/%d',blank=True)
-    caption=models.TextField(blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/%y/%m/%d')
+    caption = models.TextField(blank=True)
     title = models.CharField(max_length=200)
-    # content = models.TextField()
-    slug=models.SlugField(max_length=200, blank=True)
-    created_at=models.DateField(auto_now_add=True)
+    slug = models.SlugField(max_length=200, blank=True)
+    created = models.DateField(auto_now_add=True)
+    liked_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='posts_liked', blank=True)
 
     def __str__(self):
         return self.title
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug=slugify(self.title)
-            super().save(*args, **kwargs)
+           self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    body = models.CharField(max_length=200)
+    created = models.DateField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return f"{self.user.username}: {self.body}"
