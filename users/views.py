@@ -31,21 +31,20 @@ def user_login(request):
                 login(request,user)
                 # The login function is a part of the authentication system. It is used to log a user in to create a session for the user.
                 # return HttpResponse('user authenticated and logged in')
-                return redirect('index')
+                return render(request, 'users/userspage.html')
             else:
-                return redirect('login')
+                form.add_error(None, 'Invalid credentials')
     else:
         form= LoginForm()
-    return render (request,'users/login.html',{
-        'form':form
-    })
+    return render (request,'users/login.html',{'form':form})
 
 
 @login_required
 def index (request):
     current_user=request.user
     posts=Post.objects.filter(user=current_user)
-    return render (request,'users/index.html',{'posts':posts})
+    profile = Profile.objects.filter(user=current_user).first()
+    return render(request, 'users/index.html', {'posts':posts, 'profile': profile})
 
 
 def register(request):
@@ -57,10 +56,10 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             Profile.objects.create(user=new_user)
-            return render (request,'users/register_done.html')
+            return render(request, 'users/register_done.html', {'new_user': new_user})
     else:
-        user_form=UserRegistrationForm()
-        return render (request,'users/register.html',{ 'user_form': user_form })    
+        user_form = UserRegistrationForm()
+    return render(request, 'users/register.html', {'user_form': user_form})   
 
 @login_required
 def edit(request):
@@ -74,9 +73,14 @@ def edit(request):
     else:
         user_form=UserEditForm(instance=request.user)
         profile_form=ProfileEditForm(instance=request.user.profile)
-    return render (request,'users/edit.html',{
-        'user_form':user_form, 'profile_form':profile_form
-    })
+    return render (request,'users/edit.html',{'user_form':user_form, 'profile_form':profile_form})
+
+@login_required
+def myView(request):
+    current_user = request.user
+    posts = Post.objects.filter(user=current_user)
+    profile = Profile.objects.filter(user=current_user).first()
+    return render(request, 'users/userspage.html', {'posts':posts, 'profile': profile})
 
 
 class FriendshipListView(LoginRequiredMixin, ListView):
