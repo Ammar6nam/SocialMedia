@@ -4,34 +4,48 @@
 <div class="flex items-center mx-5 my-5">
     <img class="h-10 w-10 rounded-full" src="{{ request.user.profile.photo.url }}" alt="User Profile Photo">
     <h2 class="text-xl ml-2 font-bold text-indigo-500">Edit {{ request.user.username }}'s Profile</h2>
+</div>
 
-    <div class="flex mt-5 p-10 justify-center">
+<div class="flex mt-5 p-10 justify-center">
     <h2 class="text-3xl font-normal mb-2 text-gray-500">My Posts</h2>
 </div>
-<div>Create Post</div>
-<div class="grid grid-cols-1 gap-6 mx-auto p-10">
+
+<div class="grid grid-cols-1 gap-6 mx-auto p-10 justify-center">
     {% for post in posts %}
-    <a href="#" class="flex flex-col items-center">
-        <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
-            <div class="user-container flex mx-5 my-5">
-                <img class="h-10 w-10 rounded-full ml-2" src="{{ profile.photo.url }}" alt="User Profile Photo">
-                <div class="mx-2 my-2 font-bold"><span class="text-indigo-500">{{ post.user }}</span></div>
-            </div>
-            <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full">
+    <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
+        <div class="user-container flex mx-5 my-5">
+            <img class="h-10 w-10 rounded-full ml-2" src="{{ post.user.profile.photo.url }}" alt="User Profile Photo">
+            <div class="mx-2 my-2 font-bold"><span class="text-indigo-500">{{ post.user.username }}</span></div>
         </div>
-        <div class="px-6 py-4">
-            <div class="icon-container flex gap-3 justify-start">
-                <img class="w-6 h-6 ml-2" src="{% static 'users/images/like.png'%}" alt="like-button">
-                <img class="w-6 h-6 ml-2" src="{% static 'users/images/comment.png'%}" alt="comment-button">
-                <img class="w-6 h-6 ml-2" src="{% static 'users/images/share.png'%}" alt="share-button">
-            </div>
-        </div>
-        <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2">{{post.title}}</div>
-            <p class="text-gray-700 text-base">{{post.caption}}</p>
-        </div>
-    </a>
+        <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full">
+    </div>
+    <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2">{{ post.title }}</div>
+        <p class="text-gray-700 text-base">{{ post.caption }}</p>
+    </div>
     {% endfor %}
+
+    <div class="m-10">
+        <h2 class="text-2xl font-bold">Create a Post</h2>
+        <div class="container py-5 mx-10">
+            <form method="post" class="bg-white shadow-md px-8 rounded pt-6 pb-8 mb-4" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="id_title">Add Title</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="id_title" type="text" name="title" placeholder="Title" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="id_image">Add Image</label>
+                    <input type="file" name="image" id="id_image" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="id_caption">Add Text</label>
+                    <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="id_caption" name="caption" rows="4" placeholder="Enter text here..." required></textarea>
+                </div>
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

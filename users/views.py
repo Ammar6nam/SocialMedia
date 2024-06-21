@@ -88,7 +88,9 @@ class FriendshipListView(LoginRequiredMixin, ListView):
     template_name = 'users/friends_list.html'
 
     def get_queryset(self):
+        print("Getting friends list...")
         return Friendship.objects.filter(from_user=self.request.user)
+
 
 class CreateFriendshipView(LoginRequiredMixin, CreateView):
     model = Friendship

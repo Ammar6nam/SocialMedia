@@ -17,16 +17,17 @@
                     </div>
                     <div class="space-x-1">
                         {% if request.user.is_authenticated %}
-                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'create' %}">New Post</a>
-                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'index' %}">All Posts</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'userspage' %}">Posts</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'feed' %}">All Posts</a>
                             <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'feed' %}">Messages</a>
-                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'index' %}">Friends</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'friends_list' %}">Friends</a>
                             <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
                                 {% csrf_token %}
                                 <button class="py-4 px-2 text-gray-500 font-semibold" type="submit">Logout</button>
                             </form>
                         {% else %}
                             <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'index' %}">All Posts</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'register' %}">Register</a>
                             <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'login' %}">Login</a>
                         {% endif %}
                     </div>

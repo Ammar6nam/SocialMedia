@@ -1,11 +1,16 @@
-{% extends 'base.html' %}
-
+{% extends "users/base.html" %}
 {% block content %}
-  <h1>Friendships</h1>
-  <ul>
-    {% for friendship in object_list %}
-      <li>{{ friendship }}</li>
-    {% endfor %}
-  </ul>
+  <h1>Friends</h1>
+  {% if object_list %}
+    <ul>
+      {% for friendship in object_list %}
+        <li class="user-container flex mx-5 my-5">
+          <img class="h-10 w-10 rounded-full ml-2" src="{{ friendship.to_user.profile.photo.url }}" alt="User Profile Photo">
+          {{ friendship.to_user.username }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Sorry, for now you got no friends. Try to make connections to other users.</p>
+  {% endif %}
 {% endblock %}
-

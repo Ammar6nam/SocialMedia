@@ -20,8 +20,8 @@ def post_create(request):
         else:
             messages.error(request, 'There were errors in the form. Please correct them and try again.')
     else:
-        form = PostCreateForm(data=request.GET)# we must mention GET here to save the photo!
-        # form=PostCreateForm()
+        #form = PostCreateForm(data=request.GET)# we must mention GET here to save the photo!
+        form = PostCreateForm()
     return render(request, 'posts/create.html', {'form': form})
 
 @login_required
@@ -42,7 +42,7 @@ def feed(request):
     else:
         comment_form = CommentForm()
 
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('created')
     logged_user = request.user
     context = {
         'posts': posts,
