@@ -1,5 +1,6 @@
 from django.urls import path
-from . import views
+from users import views
+from posts.views import edit_post
 from django.contrib.auth import views as auth_view
 
 
@@ -24,6 +25,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.user_login, name='login'),
     path('userpage/', views.myView, name='userspage'),
+    path('post/<int:post_id>/edit/', edit_post, name='edit_post'),
     path('logout/', auth_view.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('password_change/', auth_view.PasswordChangeView.as_view(template_name='users/password_change_form.html'), name='password_change'),
     path('password_change/done/', auth_view.PasswordChangeDoneView.as_view(template_name='users/password_change_done.html'), name='password_change_done'),

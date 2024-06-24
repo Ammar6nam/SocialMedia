@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Post
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
+from posts import forms as PostEditForm
 
 @login_required
 def post_create(request):
@@ -51,6 +52,19 @@ def feed(request):
     }
     return render(request, 'posts/feed.html', context)
 
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, user=request.user)
+
+    if request.method == 'POST':
+        form = PostEditForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('userspage')  # Redirect to the 'userspage' after saving the post
+    else:
+        form = PostEditForm(instance=post)
+    return render(request, 'posts/edit_post.html', {'form': form, 'post': post})
 
 
 @csrf_protect

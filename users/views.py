@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import Profile, Friendship, Follow
 from .forms import UserEditForm, ProfileEditForm
+from posts.forms import PostCreateForm
 from posts.models import Post
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView
@@ -75,12 +76,25 @@ def edit(request):
         profile_form=ProfileEditForm(instance=request.user.profile)
     return render (request,'users/edit.html',{'user_form':user_form, 'profile_form':profile_form})
 
+
 @login_required
 def myView(request):
     current_user = request.user
-    posts = Post.objects.filter(user=current_user)
+    posts = Post.objects.filter(user=current_user).order_by('-created')
     profile = Profile.objects.filter(user=current_user).first()
-    return render(request, 'users/userspage.html', {'posts':posts, 'profile': profile})
+
+    if request.method == 'POST':
+        form = PostCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = current_user
+            post.save()
+            return redirect('userspage')  # Redirect to the 'userspage' after saving the post
+    else:
+        form = PostCreateForm()
+
+    return render(request, 'users/userspage.html', {'posts': posts, 'profile': profile, 'form': form})
+
 
 
 class FriendshipListView(LoginRequiredMixin, ListView):
