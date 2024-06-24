@@ -26,7 +26,7 @@ def post_create(request):
     return render(request, 'posts/create.html', {'form': form})
 
 @login_required
-def feed(request):
+def comment_create(request):
     if request.method == "POST":
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
@@ -51,6 +51,35 @@ def feed(request):
         'comment_form': comment_form,
     }
     return render(request, 'posts/feed.html', context)
+
+
+@login_required
+def comment_create_userspage(request, username):
+    if request.method == "POST":
+        comment_form_user = CommentForm(data=request.POST)
+        if comment_form_user.is_valid():
+            new_comment = comment_form_user.save(commit=False)
+            post_id = request.POST.get('post_id')
+            post = get_object_or_404(Post, id=post_id)
+            new_comment.post = post
+            new_comment.posted_by = request.user
+            try:
+                new_comment.save()
+            except Exception as e:
+                print(f"Error saving comment: {e}")
+            return redirect('userspage', username=username)  # Redirect to the same view
+        
+    posts = Post.objects.filter(user__username=username).order_by('-created')
+    comment_form_user = CommentForm() 
+    logged_user = request.user
+    context = {
+        'posts': posts,
+        'logged_user': logged_user,
+        'comment_form_user': comment_form_user,
+        'username': username,
+    }
+    return render(request, 'users/userspage.html', context)
+
 
 
 @login_required

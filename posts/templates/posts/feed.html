@@ -45,7 +45,7 @@
 
         <div class="py-5">
             {% for comment in post.comments.all %}
-                <span class="font-bold text-gray-800">{{ comment.posted_by }}</span>
+                <span class="font-bold text-gray-800">{{ comment.posted_by }} on {{ comment.created }}</span>
                 <p class="text-xs text-gray-600">{{ comment.body }}</p>
                 <br>
             {% endfor %}
@@ -58,7 +58,7 @@
                         {{ comment_form.body }}
                     </div>
                     <input type="hidden" name="post_id" id="post_id" value="{{ post.id }}">
-                    <button class="bg-green-500 text-white px-5 pl-2" type="submit">Add</button>
+                    <button class="bg-green-500 text-white px-5 pl-2" type="submit">Add Comment</button>
                 </div>
             </form>
         </div>
@@ -73,7 +73,7 @@
             var likeIcon = $(this).find('.like-icon');
             $.ajax({
                 method: "POST",
-                url: "/posts/like",  // Update this URL to match your like URL pattern
+                url: "/posts/like/",  // Update this URL to match your like URL pattern
                 data: {
                     post_id: post_id, 
                     csrfmiddlewaretoken: '{{ csrf_token }}'

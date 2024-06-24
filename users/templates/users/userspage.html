@@ -3,7 +3,9 @@
 {% block body %}
 <div class="flex items-center mx-5 my-5">
     <img class="h-10 w-10 rounded-full" src="{{ request.user.profile.photo.url }}" alt="User Profile Photo">
-    <h2 class="text-xl ml-2 font-bold text-indigo-500">Edit {{ request.user.username }}'s Profile</h2>
+    <a class="text-xl ml-2 font-bold text-indigo-500" href="{% url 'edit' %}">
+        <h2>Edit {{ request.user.username }}'s Profile</h2>
+    </a>
 </div>
 
 <div class="flex mt-5 p-10 justify-center">
@@ -11,48 +13,90 @@
 </div>
 
 <div class="grid grid-cols-1 gap-6 mx-auto p-10 justify-center">
+    <!-- Post loop -->
     {% for post in posts %}
-    <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
+    <div class="rounded overflow-hidden w-[470px] h-auto bg-white shadow-lg mb-6">
+        <!-- Post content -->
         <div class="user-container flex mx-5 my-5">
             <img class="h-10 w-10 rounded-full ml-2" src="{{ post.user.profile.photo.url }}" alt="User Profile Photo">
-            <div class="mx-2 my-2 font-bold"><span class="text-indigo-500">{{ post.user.username }}</span></div>
+            <div class="mx-2 my-2 font-bold">
+                <span class="text-indigo-500">{{ post.user.username }}</span>
+            </div>
         </div>
-        <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full">
-    </div>
-    <div class="px-6 py-4">
-        <div class="font-bold text-xl mb-2">{{ post.title }}</div>
-        <p class="text-gray-700 text-base">{{ post.caption }}</p>
+        <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-60">
+        <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">{{ post.title }}</div>
+            <p class="text-gray-700 text-base">{{ post.caption }}</p>
+            <!-- Edit button for each post -->
+            <a href="{% url 'edit_post' post.id %}" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Edit Post</a>
+        </div>
+        <!-- Comments section -->
+        <div class="px-6 py-4">
+            <h3 class="text-lg font-bold">Comments</h3>
+            {% for comment in post.comments.all %}
+            <div class="mb-2">
+                <span class="font-bold text-sm text-gray-700">{{ comment.posted_by }} on {{ comment.created }}</span>
+                <p class="text-xs text-gray-600">{{ comment.body }}</p>
+            </div>
+            {% endfor %}
+            <!-- Comment form for each post -->
+            <form method="post" action="{% url 'comment_create_user' request.user.username %}" class="bg-white shadow-md mt-4 px-4 rounded pt-6 pb-2 mb-4">
+                {% csrf_token %}
+                <div class="flex mb-2">
+                    <div class="w-full">
+                        <input class="w-full h-24 p-2 border border-gray-300 rounded" id="id_body" name="body">{{ comment_form_user.body }}
+                    </div>
+                    <input type="hidden" name="post_id" value="{{ post.id }}">  <!-- Hidden input for post ID -->
+                    <button class="bg-green-500 text-white px-5 ml-2" type="submit">Add Comment</button>
+                </div>
+                {% if comment_form_user.errors %}
+                <ul class="text-red-500 text-sm">
+                    {% for field in comment_form_user %}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </form>
+        </div>
     </div>
     {% endfor %}
+</div>
 
 <div class="m-10">
     <h2 class="text-2xl font-bold">Create a Post</h2>
     <div class="container py-5 mx-10">
         <form method="post" class="bg-white shadow-md m-10 px-8 rounded pt-6 pb-8 mb-4 w-4/5" enctype="multipart/form-data">
-            {% csrf_token %} 
+            {% csrf_token %}
             <div class="mb-2">
-              <label class="block text-grey-700 text-sm font-bold mb-2" for="">Add Title</label>
-              <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-grey-700">
-                {{ form.title }}
-              </div>
+                <label class="block text-grey-700 text-sm font-bold mb-2" for="title">Add Title</label>
+                <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-grey-700">
+                    {{ form.title }}
+                </div>
             </div>
             <div class="mb-2">
-              <label class="block text-grey-700 text-sm font-bold mb-2" for="">Add Image</label>
-              <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-grey-700">
-                {{ form.image }}
-              </div>
+                <label class="block text-grey-700 text-sm font-bold mb-2" for="image">Add Image</label>
+                <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-grey-700">
+                    {{ form.image }}
+                </div>
             </div>
             <div class="mb-2">
-              <label class="block text-grey-700 text-sm font-bold mb-2" for="">Add Text</label>
-              <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-grey-700">
-                {{ form.caption }}
-              </div>
+                <label class="block text-grey-700 text-sm font-bold mb-2" for="caption">Add Text</label>
+                <div class="shadow appearance-none border rounded py-2 px-3 mr-10 text-grey-700">
+                    {{ form.caption }}
+                </div>
             </div>
-           
-             <button type="submit" class="bg-green-500 text-white my-5 px-5 py-2">Submit</button>
-          </form>
+            <div class="text-red-500 text-sm">
+                {% if form.errors %}
+                    {{ form.errors }}
+                {% endif %}
+            </div>
+            <button type="submit" class="bg-green-500 text-white my-5 px-5 py-2">Submit</button>
+        </form>
     </div>
 </div>
-
 
 {% endblock %}

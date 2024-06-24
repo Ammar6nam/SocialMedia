@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import LoginForm, UserRegistrationForm, FriendshipForm, FollowForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from .models import Profile, Friendship, Follow
+from .models import Profile, Friendship, Follow, User
 from .forms import UserEditForm, ProfileEditForm
 from posts.forms import PostCreateForm
 from posts.models import Post
@@ -78,8 +78,9 @@ def edit(request):
 
 
 @login_required
-def myView(request):
+def myView(request, username):
     current_user = request.user
+    user = User.objects.get(username=username)
     posts = Post.objects.filter(user=current_user).order_by('-created')
     profile = Profile.objects.filter(user=current_user).first()
 
