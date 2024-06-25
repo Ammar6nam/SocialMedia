@@ -11,10 +11,10 @@
     <div id="{{ post.id }}" class="flex flex-col items-center post-item">
         <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
             <div class="user-container flex mx-5 my-5">
-                <img class="h-10 w-10 rounded-full ml-2" src="{{ post.user.profile.photo.url }}" alt="User Profile Photo">
+                <img class="h-10 w-10 rounded-full ml-2" src="{{ post.user.profile.photo.url }}" alt="User Profile Photo" onerror="this.onerror=null; this.src='{% static 'users/images/user.png' %}'">
                 <div class="my-2 font-bold"><span class="text-indigo-500">{{ post.user }}</span></div>
             </div>
-            <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full">
+            <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full" onerror="this.onerror=null; this.src='{% static 'users/images/img_1_sq.jpg' %}'">
         </div>
         <div class="px-6 py-4">
             <div class="icon-container flex gap-3 justify-start">

@@ -1,11 +1,12 @@
 {% extends "users/base.html" %}
+{% load static %}
 {% block body %}
 <h2>Followers of {{ user.username }}</h2>
   {% if followers %}
     <ul>
       {% for follower in followers %}
         <li class="user-container flex mx-5 my-5">
-          <img class="h-10 w-10 rounded-full ml-2" src="{{ follower.from_user.profile.photo.url }}" alt="{{ follower.from_user.username }}'s Profile Photo" onerror="this.onerror=null; this.src='/path/to/placeholder.jpg';">
+          <img class="h-10 w-10 rounded-full ml-2" src="{{ follower.from_user.profile.photo.url }}" alt="{{ follower.from_user.username }}'s Profile Photo" onerror="this.onerror=null; this.src='{% static 'users/images/user.png' %}'">
           {{ follower.from_user.username }} ({{ follower.created_at|date:"F j, Y" }})
         </li>
       {% endfor %}
