@@ -1,16 +1,17 @@
 {% extends "users/base.html" %}
 {% block content %}
-  <h1>Friends</h1>
-  {% if object_list %}
+  <h1>Your Friends</h1>
+  {% if friendships %}
     <ul>
-      {% for friendship in object_list %}
+      {% for friendship in friendships %}
         <li class="user-container flex mx-5 my-5">
-          <img class="h-10 w-10 rounded-full ml-2" src="{{ friendship.to_user.profile.photo.url }}" alt="User Profile Photo">
-          {{ friendship.to_user.username }}
+          <img class="h-10 w-10 rounded-full ml-2" src="{{ friendship.to_user.profile.photo.url }}" alt="{{ friendship.to_user.username }}'s Profile Photo" onerror="this.onerror=null; this.src='/path/to/placeholder.jpg';">
+          {{ friendship.to_user.username }} ({{ friendship.created_at|date:"F j, Y" }})
         </li>
       {% endfor %}
     </ul>
   {% else %}
     <p>Sorry, for now you got no friends. Try to make connections to other users.</p>
+    <a href="/friends-create" class="btn btn-primary">Find Friends</a>
   {% endif %}
 {% endblock %}

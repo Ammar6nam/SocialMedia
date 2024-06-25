@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from .forms import LoginForm, UserRegistrationForm, FriendshipForm, FollowForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from .models import Profile, Friendship, Follow, User
 from .forms import UserEditForm, ProfileEditForm
 from posts.forms import PostCreateForm
@@ -32,7 +34,7 @@ def user_login(request):
                 login(request,user)
                 # The login function is a part of the authentication system. It is used to log a user in to create a session for the user.
                 # return HttpResponse('user authenticated and logged in')
-                return render(request, 'users/userspage.html')
+                return redirect(reverse('userspage', args=[user.username]))
             else:
                 form.add_error(None, 'Invalid credentials')
     else:
@@ -40,12 +42,15 @@ def user_login(request):
     return render (request,'users/login.html',{'form':form})
 
 
-@login_required
+
 def index (request):
-    current_user=request.user
-    posts=Post.objects.filter(user=current_user)
-    profile = Profile.objects.filter(user=current_user).first()
-    return render(request, 'users/index.html', {'posts':posts, 'profile': profile})
+    if request.user.is_authenticated:
+        current_user = request.user
+        posts = Post.objects.filter(user=current_user)
+        profile = Profile.objects.filter(user=current_user).first()
+        return render(request, 'users/index.html', {'posts': posts, 'profile': profile})
+    else:
+        return render(request, 'users/unthenticated_index.html')
 
 
 def register(request):
@@ -81,6 +86,8 @@ def edit(request):
 def myView(request, username):
     current_user = request.user
     user = User.objects.get(username=username)
+    if current_user != user:
+        return HttpResponseForbidden()
     posts = Post.objects.filter(user=current_user).order_by('-created')
     profile = Profile.objects.filter(user=current_user).first()
 
@@ -90,7 +97,7 @@ def myView(request, username):
             post = form.save(commit=False)
             post.user = current_user
             post.save()
-            return redirect('userspage')  # Redirect to the 'userspage' after saving the post
+            return redirect('userspage',username=current_user.username)  # Redirect to the 'userspage' after saving the post
     else:
         form = PostCreateForm()
 
@@ -98,13 +105,10 @@ def myView(request, username):
 
 
 
-class FriendshipListView(LoginRequiredMixin, ListView):
+class FriendshipListView(ListView):
     model = Friendship
     template_name = 'users/friends_list.html'
-
-    def get_queryset(self):
-        print("Getting friends list...")
-        return Friendship.objects.filter(from_user=self.request.user)
+    context_object_name = 'friendships'
 
 
 class CreateFriendshipView(LoginRequiredMixin, CreateView):
@@ -115,13 +119,13 @@ class CreateFriendshipView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.from_user = self.request.user
         return super().form_valid(form)
+        
 
-class FollowListView(LoginRequiredMixin, ListView):
+class FollowListView(ListView):
     model = Follow
     template_name = 'users/follower_list.html'
-
-    def get_queryset(self):
-        return Follow.objects.filter(from_user=self.request.user)
+    context_object_name = 'followers'
+    
 
 class CreateFollowView(LoginRequiredMixin, CreateView):
     model = Follow
@@ -133,24 +137,3 @@ class CreateFollowView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from django.views.generic.edit import CreateView
-# from .forms import LoginForm
-
-# class UserLogin(CreateView):
-#     form_class=LoginForm
-#     template_name='users/login.html'
-#     # model=
-#     # success_url=

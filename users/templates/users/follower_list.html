@@ -1,11 +1,17 @@
-<!-- follows/list.html -->
-{% extends 'base.html' %}
-
+{% extends "users/base.html" %}
 {% block content %}
-  <h1>Follows</h1>
-  <ul>
-    {% for follow in object_list %}
-      <li>{{ follow }}</li>
-    {% endfor %}
-  </ul>
+<h2>Your Followers</h2>
+  {% if followers %}
+    <ul>
+      {% for follower in followers %}
+        <li class="user-container flex mx-5 my-5">
+          <img class="h-10 w-10 rounded-full ml-2" src="{{ follower.from_user.profile.photo.url }}" alt="{{ follower.from_user.username }}'s Profile Photo" onerror="this.onerror=null; this.src='/path/to/placeholder.jpg';">
+          {{ follower.from_user.username }} ({{ follower.created_at|date:"F j, Y" }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Sorry, for now you got no followers. Try to make connections to other users.</p>
+    <a href="/follower_create" class="btn btn-primary">Make Followers</a>
+  {% endif %}
 {% endblock %}

@@ -4,7 +4,7 @@
 <div class="flex items-center mx-5 my-5">
     <img class="h-10 w-10 rounded-full" src="{{ request.user.profile.photo.url }}" alt="User Profile Photo">
     <a class="text-xl ml-2 font-bold text-indigo-500" href="{% url 'edit' %}">
-        <h2>Edit {{ request.user.username }}'s Profile</h2>
+        <h3>Edit {{ request.user.username }}'s Profile</h3>
     </a>
 </div>
 

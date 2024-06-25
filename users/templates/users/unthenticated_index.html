@@ -1,0 +1,22 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="flex mt-5 p-10 justify-center">
+    <h2 class="text-2xl font-normal mb-2 text-gray-500">All Posts</h2>
+</div>
+<div class="grid grid-cols-1 gap-6 mx-auto p-10">
+    {% for post in posts %}
+    <div id="{{ post.id }}" class="flex flex-col items-center post-item">
+        <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
+            <img src="{{ post.image.url }}" alt="Post Image" class="object-cover w-full h-full">
+        </div>
+        <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">{{ post.title }}</div>
+            <p class="text-gray-700 text-base">{{ post.caption }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

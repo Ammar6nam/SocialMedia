@@ -37,5 +37,8 @@ class Follow(models.Model):
     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follows_to')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('from_user', 'to_user')
+
     def __str__(self):
         return f"{self.from_user} follows {self.to_user}"
