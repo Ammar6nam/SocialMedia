@@ -20,8 +20,8 @@
                             <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'userspage' username=request.user.username %}">Posts</a>
                             <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'feed' %}">All Posts</a>
                             <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'feed' %}">Messages</a>
-                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'friends_list' %}">Friends</a>
-                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'follower_list' %}">Followers</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'friends_list' username=request.user.username %}">Friends</a>
+                            <a class="py-4 px-2 text-gray-500 font-semibold" href="{% url 'follower_list' username=request.user.username %}">Followers</a>
                             <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
                                 {% csrf_token %}
                                 <button class="py-4 px-2 text-gray-500 font-semibold" type="submit">Logout</button>
@@ -35,7 +35,6 @@
                 </div>
             </div>
         </nav>
-        {% block body %}
-        {% endblock %}
+        {% block body %}{% endblock %}
     </body>
 </html>

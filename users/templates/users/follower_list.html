@@ -1,6 +1,6 @@
 {% extends "users/base.html" %}
-{% block content %}
-<h2>Your Followers</h2>
+{% block body %}
+<h2>Followers of {{ user.username }}</h2>
   {% if followers %}
     <ul>
       {% for follower in followers %}
@@ -11,7 +11,8 @@
       {% endfor %}
     </ul>
   {% else %}
-    <p>Sorry, for now you got no followers. Try to make connections to other users.</p>
+    <p>Sorry, for now {{ user.username }} you have no followers. Try to make connections to other users.</p>
     <a href="/follower_create" class="btn btn-primary">Make Followers</a>
   {% endif %}
 {% endblock %}
+

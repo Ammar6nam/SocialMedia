@@ -10,6 +10,7 @@ from posts.forms import PostCreateForm
 from posts.models import Post
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView
+from django.db.models import F
 
 
 # Create your views here.
@@ -110,6 +111,16 @@ class FriendshipListView(ListView):
     template_name = 'users/friends_list.html'
     context_object_name = 'friendships'
 
+    def get_queryset(self):
+        username = self.kwargs['username']
+        self.user = User.objects.get(username=username)
+        return Friendship.objects.filter(from_user=self.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.user
+        return context
+
 
 class CreateFriendshipView(LoginRequiredMixin, CreateView):
     model = Friendship
@@ -121,10 +132,20 @@ class CreateFriendshipView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
         
 
-class FollowListView(ListView):
-    model = Follow
+class FollowersListView(ListView):
+    model = Friendship
     template_name = 'users/follower_list.html'
     context_object_name = 'followers'
+
+    def get_queryset(self):
+        username = self.kwargs['username']
+        self.user = User.objects.get(username=username)
+        return Friendship.objects.filter(to_user=self.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.user
+        return context
     
 
 class CreateFollowView(LoginRequiredMixin, CreateView):

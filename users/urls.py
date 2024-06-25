@@ -36,8 +36,9 @@ urlpatterns = [
     path('reset/done/', auth_view.PasswordResetCompleteView.as_view(template_name = 'users/password_reset_complete.html'), name = 'password_reset_complete' ),
     path('register/', views.register, name='register'),
     path('edit/', views.edit, name='edit'),
-    path('friendships/', views.FriendshipListView.as_view(), name='friends_list'),
+    path('friendships/<str:username>/', views.FriendshipListView.as_view(), name='friends_list'),
     path('friendships/create/', views.CreateFriendshipView.as_view(), name='friends_create'),
-    path('follows/', views.FollowListView.as_view(), name='follower_list'),
+    #path('follows/', views.FollowListView.as_view(), name='follower_list'),
+    path('follows/<str:username>/', views.FollowersListView.as_view(), name='follower_list'),
     path('follows/create/', views.CreateFollowView.as_view(), name='follower_create'),
     ]
