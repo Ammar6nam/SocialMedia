@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .forms import LoginForm, UserRegistrationForm, FriendshipForm, FollowForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseNotFound
 from .models import Profile, Friendship, Follow, User
 from .forms import UserEditForm, ProfileEditForm
 from posts.forms import PostCreateForm
 from posts.models import Post
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, View
 from django.db.models import F
 
 
@@ -105,6 +105,13 @@ def myView(request, username):
     return render(request, 'users/userspage.html', {'posts': posts, 'profile': profile, 'form': form})
 
 
+class UserListView(ListView):
+    model = User
+    template_name = 'users/friends_create.html'
+    context_object_name = 'users_with_profiles'
+    
+    def get_queryset(self):
+        return User.objects.filter(profile__isnull=False)
 
 class FriendshipListView(ListView):
     model = Friendship
@@ -126,10 +133,28 @@ class CreateFriendshipView(LoginRequiredMixin, CreateView):
     model = Friendship
     form_class = FriendshipForm
     template_name = 'users/friends_create.html'
+    success_url = reverse_lazy('friends_list')  # Redirect URL after successful form submission
 
     def form_valid(self, form):
         form.instance.from_user = self.request.user
+        to_user = User.objects.get(id=self.kwargs['user_id'])
+        form.instance.to_user = to_user
         return super().form_valid(form)
+    # def form_valid(self, form):
+    #     form.instance.from_user = self.request.user
+    #     form.instance.to_user_id = self.kwargs['user_id']  # Set the `to_user` based on `user_id` from URL
+    #     return super().form_valid(form)
+    
+class FriendsDeleteView(View):
+    def post(self, request, id):
+        try:
+            user = User.objects.get(id=id)
+            request.user.profile.friends.remove(user)
+            return redirect('friends_list')
+        except User.DoesNotExist:
+            # Handle the case where the user is not found
+            return HttpResponseNotFound('User not found')
+
         
 
 class FollowersListView(ListView):
@@ -145,6 +170,7 @@ class FollowersListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user'] = self.user
+        context['users_with_profiles'] = User.objects.filter(profile__isnull=False)
         return context
     
 
@@ -157,4 +183,13 @@ class CreateFollowView(LoginRequiredMixin, CreateView):
         form.instance.from_user = self.request.user
         return super().form_valid(form)
 
+class FollowDeleteView(View):
+    def post(self, request, id):
+        try:
+            user = User.objects.get(id=id)
+            request.user.profile.follower.remove(user)
+            return redirect('follower_list')
+        except User.DoesNotExist:
+            # Handle the case where the user is not found
+            return HttpResponseNotFound('User not found')
 

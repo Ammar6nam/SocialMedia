@@ -14,10 +14,11 @@
         </li>
       {% endfor %}
     </ul>
+    <a href="{% url 'friends_create' user_id=request.user.id %}" class="btn btn-primary">Find Friends</a>
   {% else %}
     <p>Sorry, for now {{ user.username }} has no friends yet. Try to make connections to other users.</p>
-    <a href="/friends-create" class="btn btn-primary">Find Friends</a>
-  {% endif %}
+    <a href="{% url 'friends_create' user_id=request.user.id %}" class="btn btn-primary">Find Friends</a>
+  {% endif %}a
 {% endblock %}
 
 

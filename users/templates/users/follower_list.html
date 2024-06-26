@@ -11,9 +11,10 @@
         </li>
       {% endfor %}
     </ul>
+    <a href="{% url 'follower_create' %}" class="btn btn-primary">Make Followers</a>
   {% else %}
     <p>Sorry, for now {{ user.username }} you have no followers. Try to make connections to other users.</p>
-    <a href="/follower_create" class="btn btn-primary">Make Followers</a>
+    <a href="{% url 'follower_create' %}" class="btn btn-primary">Make Followers</a>
   {% endif %}
 {% endblock %}
 

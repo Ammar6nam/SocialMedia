@@ -1,12 +1,33 @@
-<!-- friendships/create.html -->
 {% extends 'users/base.html' %}
-
-{% block content %}
-  <h1>Create Friendship</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create Friendship</button>
-  </form>
+{% block body %}
+  <div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold mb-4">List of Users with Profiles</h1>
+    <div class="overflow-y-auto max-h-80">
+      <ul class="divide-y divide-gray-200">
+        {% for user in users_with_profiles %}
+          <li class="py-2">
+            <div class="flex items-center">
+              <div class="ml-2">
+                <strong>{{ user.username }}</strong> - <img src="{{ user.profile.photo.url }}" alt="Profile Photo">
+                <!-- Hier könnten weitere Informationen angezeigt werden -->
+              </div>
+              {% if user != request.user %}
+                {% if user in request.user.profile.friends.all %}
+                  <form method="post" action="{% url 'friends_delete' user.id %}" class="ml-auto">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Remove Friend</button>
+                  </form>
+                {% else %}
+                  <form method="post" action="{% url 'friends_create' user.id %}" class="ml-auto">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Friend</button>
+                  </form>
+                {% endif %}
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 {% endblock %}
-  

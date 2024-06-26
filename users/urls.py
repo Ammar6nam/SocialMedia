@@ -37,7 +37,9 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('edit/', views.edit, name='edit'),
     path('friendships/<str:username>/', views.FriendshipListView.as_view(), name='friends_list'),
-    path('friendships/create/', views.CreateFriendshipView.as_view(), name='friends_create'),
+    #path('friendships/create/', views.CreateFriendshipView.as_view(), name='friends_create'),
+    path('friendships/create/<int:user_id>/', views.CreateFriendshipView.as_view(), name='friends_create'),
+
     #path('follows/', views.FollowListView.as_view(), name='follower_list'),
     path('follows/<str:username>/', views.FollowersListView.as_view(), name='follower_list'),
     path('follows/create/', views.CreateFollowView.as_view(), name='follower_create'),
