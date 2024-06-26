@@ -1,14 +1,29 @@
-<!DOCTYPE html>
+{% extends "users/base.html" %}
+
+{% block title %}
+Logout
+{% endblock  %}
+
+
+
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logout</title>
 </head>
-<body>
-    <h1>
-        You have been logged out
-    </h1>
-    <a href= {% url 'login' %}> LOGIN </a>
-</body>
-</html>
+<body> {% endcomment %}
+
+{% block content %}
+    <table width="100%" border="1" cellpadding="10" cellspacing="0">
+        <tr>
+            <td align="center" valign="middle">
+                <h1 style="color: #333; font-weight: bold;">You have been logged out</h1>
+                <a href= {% url 'login' %} style="text-decoration: none; color: #337ab7;">LOGIN</a>
+            </td>
+        </tr>
+    </table>
+{% endblock  %}
+{% comment %} </body>
+</html> {% endcomment %}

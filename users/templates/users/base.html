@@ -59,9 +59,9 @@
          <div class="flex justify-between">
             <!--Website logo-->
             <div>
-                <a class="flex" href="">
+                <a class="flex" href="{% url "index" %}">
                     <img class="h-8 w-8 mr-2" src="{% static 'users/images/icon4.png' %}" alt="">
-                    <span class="font-semibold text-lg text-gray-500">Photo App</span>
+                    <span class="font-semibold text-lg text-gray-500">Home</span>
                 </a>
             </div>
             <!--Website items-->
@@ -71,15 +71,24 @@
                   {% else %}
                 <a class="py-4 px-2 text-gray-500 font-semibold " href="{% url 'login' %}">Login</a>
                 {% endif %}
-                <a class="py-4 px-2 text-gray-500 font-semibold " href="">Link 1</a>
+                <a class="py-4 px-2 text-gray-500 font-semibold " href="{% url 'edit' %}"> Account</a>
+                <a class="py-4 px-2 text-gray-500 font-semibold " href="{% url 'create' %}"> Create Post</a>
+                <a class="py-4 px-2 text-gray-500 font-semibold " href="{% url 'all_posts' %}"> All posts</a>
+                <a class="py-4 px-2 text-gray-500 font-semibold " href="{% url 'index' %}"> Messeges</a>
 
             </div>
         </div>
        </div>
     </nav>
+
     
     {% block content %}
     {% endblock %}
+    {% if request.user.is_authenticated %}
+    <div class="px-4 mx-auto pt-4">
+        <a class="py-4 px-2 text-gray-500 font-semibold " href="{% url 'logout' %}">Logout</a>
+    </div>
+    {% endif %}
 </body>
 
 {% comment %}

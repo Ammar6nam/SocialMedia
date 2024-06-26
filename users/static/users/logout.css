@@ -1,0 +1,39 @@
+/* Add some basic styling to the HTML elements */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* light gray background */
+  }
+  
+  h1 {
+    color: #333; /* dark gray text */
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #337ab7; /* blue link color */
+    transition: color 0.2s ease; /* add a smooth transition effect */
+  }
+  
+  a:hover {
+    color: #23527c; /* darker blue on hover */
+  }
+  
+  /* Add a simple container to center the content */
+  .container {
+    max-width: 400px; /* adjust the width to your liking */
+    margin: 40px auto; /* center the container */
+    padding: 20px;
+    background-color: #fff; /* white background */
+    border: 1px solid #ddd; /* light gray border */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* add a subtle shadow */
+  }
+  
+  /* Add some extra styling to the logout message */
+  .logout-message {
+    font-size: 18px;
+    font-weight: bold;
+    color: #666; /* dark gray text */
+    margin-bottom: 10px;
+  }

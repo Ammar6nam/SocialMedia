@@ -47,12 +47,13 @@ def user_logout(request):
 def index (request):
     current_user=request.user
     posts=Post.objects.filter(user=current_user)
-    return render (request,'users/index.html',{'posts':posts})
+    profile=Profile.objects.filter(user=current_user).first
+    return render (request,'users/index.html',{'posts':posts, 'profile':profile})
 
 
 def register(request):
     if request.method == 'POST':
-        user_form=UserRegistrationForm(request.POST)
+        user_form=UserRegistrationForm(request.POST, request.FILES)
         if user_form.is_valid():
             new_user=user_form.save(commit=False)
             # it creates a new user object but doesn't save it to the database yet.

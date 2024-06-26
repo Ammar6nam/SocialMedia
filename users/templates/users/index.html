@@ -1,7 +1,10 @@
 {% extends "users/base.html" %}
+{% load static %}
 {% block title %}
     Home Page
 {% endblock  %}
+
+
 
 {% comment %} {% block css_files  %}
     <link rel="stylesheet" href="{% static "index.css" %}" />
@@ -17,13 +20,53 @@
 
 {% block content %}
 
-<div class="container">
+<div class="flex mt-5 p-10 justify-center">
+    <h2 class="text-3xl font-normal mb-2 text-gray-500">My Posts</h2>
+   </div>
+   <div class="grid mx-60 p-10 grid-cols-1">
+    {% for post in posts %}
+    <!--Card starts here-->
+    <a href="#">
+       
+        <div class="rounded overflow-hidden w-[470px] h-[470px] bg-white shadow-lg">
+        <div class="user-container flex mx-5 my-5">
+            <img class="h-10 w-10 rounded-full" src="{{profile.profile_picture.url}}" alt="">
+            <div class="mx-2 my-2 font-bold "><span class="text-indigo-500">{{post.user}}</span></div>
+        </div>
+             <img src="{{post.image.url}}" alt="">
+        </div>
+        <div class="px-6 py-4">
+            <div class="icon-container flex gap-3">
+                <img class="w-5 h-5" src="{% static 'users/images/like1.png' %}" alt="">
+                <img class="w-5 h-5" src="{% static 'users/images/comment1.png' %}" alt="">
+                <img class="w-5 h-5" src="{% static 'users/images/share.png' %}" alt="">
+            </div>
+        </div>
+        <div class="px-6 py-4">
+                <div class="font-bold text-xl mb-2">{{post.title}}</div>
+                <p class="text-gray-700 text-base">{{post.caption}}</p>
+                <p> {{post.created_at}}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+<div class="bg-gray-200 p-2 rounded text-sm">
+    <a href="{% url 'change_password' %}" class="text-gray-600 hover:text-gray-900">Change Password</a>
+</div>
+
+{% endblock %}
+
+
+
+
+{% comment %} <div class="container">
   
 
     <h1>
         Homepage for Users App
     </h1>
-    {% comment %} <img src="{% static "media/users/14/20230916_191737.jpg" %}" alt="Ammar - The admin Of This Blog" /> {% endcomment %}
+    {% comment %} <img src="{% static "media/users/14/20230916_191737.jpg" %}" alt="Ammar - The admin Of This Blog" /> 
     
     {% for post in posts %}
     <h2> {{post.title}} </h2>
@@ -35,6 +78,7 @@
     <a href={% url 'change_password' %}>Change Password </a>
     <p></p>
     <a href={% url 'edit' %}>Edit </a> your profile
-</div>
-{% endblock  %}
+</div> {% endcomment %}
+
+
 
