@@ -24,7 +24,6 @@ from django.contrib.auth import views as auth_view
 urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.user_login, name='login'),
-    # path('userpage/', views.myView, name='userspage'),
     path('users/<str:username>/', views.myView, name='userspage'),
     path('post/<int:post_id>/edit/', edit_post, name='edit_post'),
     path('logout/', auth_view.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
@@ -37,10 +36,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('edit/', views.edit, name='edit'),
     path('friendships/<str:username>/', views.FriendshipListView.as_view(), name='friends_list'),
-    #path('friendships/create/', views.CreateFriendshipView.as_view(), name='friends_create'),
     path('friendships/create/<int:user_id>/', views.CreateFriendshipView.as_view(), name='friends_create'),
-
-    #path('follows/', views.FollowListView.as_view(), name='follower_list'),
     path('follows/<str:username>/', views.FollowersListView.as_view(), name='follower_list'),
     path('follows/create/', views.CreateFollowView.as_view(), name='follower_create'),
     ]
