@@ -1,0 +1,22 @@
+{% extends 'users/base.html' %}
+{% block title %}
+    About Admins     
+{% endblock %} 
+<link rel="stylesheet" href="{% static 'users/styles.css' %}">
+<link rel="stylesheet" href="{% static 'users/style.css' %}">{% block body %}
+<div class="container">
+    <h1>About Us</h1>
+    <div class="admin-profile">
+        <div class="admin">
+            <img src="{% static 'users/images/Ammar.jpg' %}" alt="Admin 1">
+            <h2>Mhd Ammar Nammour</h2>
+            <p>Developer Engineer</p>
+        </div>
+        <div class="admin">
+            <img src="{% static 'users/images/Daniel.jpg' %}" alt="Admin 2">
+            <h2>Daniel Ziebart</h2>
+            <p>Python backend developer</p>
+        </div>
+    </div>
+</div>
+{% endblock %} 

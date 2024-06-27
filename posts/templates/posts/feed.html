@@ -1,6 +1,12 @@
 {% extends 'users/base.html' %}
 {% load mathfilters %}
 {% load static %}
+
+
+{% block title %}
+    All Posts   
+{% endblock %} 
+
 {% block body %}
 
 <div class="flex mt-5 p-10 justify-center">
@@ -27,7 +33,7 @@
                 </a>
                 
                 <img class="w-6 h-6 ml-2" src="{% static 'users/images/comment.png' %}" alt="comment-button">
-                <img class="w-6 h-6 ml-2" src="{% static 'users/images/share.png' %}" alt="share-button">
+                <img class="w-6 h-6 ml-2 btn-share" src="{% static 'users/images/share.png' %}" alt="share-button" data-post-url="{{ post.absolute_url }}">
             </div>
         </div>
         <div>
@@ -68,12 +74,13 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        // Like button functionality
         $(document).on('click', '.btn-like', function(){
-            var post_id = $(this).data('postId');  // Using data-post-id attribute
+            var post_id = $(this).data('post-id');
             var likeIcon = $(this).find('.like-icon');
             $.ajax({
                 method: "POST",
-                url: "/posts/like/",  // Update this URL to match your like URL pattern
+                url: "/posts/like/",
                 data: {
                     post_id: post_id, 
                     csrfmiddlewaretoken: '{{ csrf_token }}'
@@ -89,6 +96,17 @@
                     console.log('Error liking post:', error);
                 }
             });
+        });
+
+        // Share button functionality
+        $(document).on('click', '.btn-share', function(){
+            var postUrl = $(this).data('post-url');
+            var tempInput = $('<input>');
+            $('body').append(tempInput);
+            tempInput.val(postUrl).select();
+            document.execCommand('copy');
+            tempInput.remove();
+            alert('Post URL copied to clipboard!');
         });
     });
 </script>

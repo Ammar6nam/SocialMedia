@@ -1,0 +1,29 @@
+/* static/users/css/about.css */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.admin-profile {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.admin {
+    text-align: center;
+}
+.admin img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+.admin h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+.admin p {
+    font-style: italic;
+    color: #666;
+}

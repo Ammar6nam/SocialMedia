@@ -11,7 +11,7 @@ class UserEditForm(forms.ModelForm):
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model=Profile
-        fields=('photo',)
+        fields=('photo',) 
 
 
 class LoginForm(forms.Form):
@@ -22,10 +22,10 @@ class LoginForm(forms.Form):
 class UserRegistrationForm(forms.ModelForm):
     password=forms.CharField(label='Password',widget=forms.PasswordInput)
     password2=forms.CharField(label='Confirm password',widget=forms.PasswordInput)
-
+    profile_picture = forms.ImageField(required=False)
     class Meta:
         model=User
-        fields={'username','email','first_name'}
+        fields={'username','email', 'profile_picture','first_name'}
 
     def check_password(self):
         cd = self.cleaned_data

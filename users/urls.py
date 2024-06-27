@@ -39,4 +39,5 @@ urlpatterns = [
     path('friendships/create/<int:user_id>/', views.CreateFriendshipView.as_view(), name='friends_create'),
     path('follows/<str:username>/', views.FollowersListView.as_view(), name='follower_list'),
     path('follows/create/', views.CreateFollowView.as_view(), name='follower_create'),
+    path('about/', views.about_view, name='about'),
     ]

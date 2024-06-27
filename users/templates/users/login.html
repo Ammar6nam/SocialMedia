@@ -1,14 +1,8 @@
 {% extends "users/base.html" %}
+{% block title %}
+     Login           
+{% endblock %} 
 {% block body %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<h1 class = "text-2xl m-10">Login user</h1>
-<body>
     <div class="container py-5">
     
     <form method="post" class = "bg-white shadow-md m-10 w-2/5 rounded px-8 pt-6 pb-8 mb-4" action="{% url 'login' %}">
@@ -40,6 +34,4 @@
         {% endfor %}
     </div>
     {% endif %}
-</body>
-</html>
 {% endblock %}

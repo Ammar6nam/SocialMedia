@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'mathfilters',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -40,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'posts',
-    'chat',
+    'mathfilters',
+    'chatapp',
     'channels',
 ]
 
@@ -129,6 +129,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+        # '/home/dci-student/projects/CodeBreakers/SocialMedia/static',]
 STATIC_ROOT= os.path.join(BASE_DIR,'static_media/')
 #
 # Default primary key field type
@@ -142,3 +143,5 @@ LOGOUT_URL='logout'
 EMAIL_BACKEND= 'django.core.mail.backends.console.EmailBackend'
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR /'media'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -44,29 +44,47 @@ def user_login(request):
 
 
 
-def index (request):
+def index(request):
     if request.user.is_authenticated:
         current_user = request.user
-        posts = Post.objects.filter(user=current_user)
-        profile = Profile.objects.filter(user=current_user).first()
+        posts = Post.objects.all().order_by('-created')
+        profile = Profile.objects.all().first()
         return render(request, 'users/index.html', {'posts': posts, 'profile': profile})
     else:
-        return render(request, 'users/unthenticated_index.html')
-
+        public_posts = Post.objects.all().order_by('-created')  # retrieve public posts
+        return render(request, 'users/public_index.html', {'posts': public_posts})
 
 def register(request):
     if request.method == 'POST':
-        user_form=UserRegistrationForm(request.POST)
-        if user_form.is_valid():
-            new_user=user_form.save(commit=False)
-            # it creates a new user object but doesn't save it to the database yet.
+        user_form = UserRegistrationForm(request.POST)
+        profile_form = ProfileEditForm(request.POST, request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            new_user = user_form.save(commit=False)
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
-            Profile.objects.create(user=new_user)
+            profile = profile_form.save(commit=False)
+            profile.user = new_user
+            profile.save()
             return render(request, 'users/register_done.html', {'new_user': new_user})
     else:
         user_form = UserRegistrationForm()
-    return render(request, 'users/register.html', {'user_form': user_form})   
+        profile_form = ProfileEditForm()
+    return render(request, 'users/register.html', {'user_form': user_form, 'profile_form': profile_form})
+
+
+# def register(request):
+#     if request.method == 'POST':
+#         user_form=UserRegistrationForm(request.POST)
+#         if user_form.is_valid():
+#             new_user=user_form.save(commit=False)
+#             # it creates a new user object but doesn't save it to the database yet.
+#             new_user.set_password(user_form.cleaned_data['password'])
+#             new_user.save()
+#             Profile.objects.create(user=new_user)
+#             return render(request, 'users/register_done.html', {'new_user': new_user})
+#     else:
+#         user_form = UserRegistrationForm()
+#     return render(request, 'users/register.html', {'user_form': user_form})   
 
 @login_required
 def edit(request):
@@ -193,3 +211,5 @@ class FollowDeleteView(View):
             # Handle the case where the user is not found
             return HttpResponseNotFound('User not found')
 
+def about_view(request):
+    return render(request, 'users/about.html')

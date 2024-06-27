@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True)
+    photo = models.ImageField(default='users/images/anonymous.png', upload_to='users/%Y/%m/%d', blank=True)
     bio = models.TextField(max_length=200,blank=True)
     
     # phone_number=models.CharField(max_length=20,blank=True)
@@ -41,4 +41,4 @@ class Follow(models.Model):
         unique_together = ('from_user', 'to_user')
 
     def __str__(self):
-        return f"{self.from_user} follows {self.to_user}"
+        return f"{self.from_user} follows {self.to_user}" 

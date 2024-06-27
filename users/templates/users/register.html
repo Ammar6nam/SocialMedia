@@ -1,16 +1,11 @@
 {% extends "users/base.html" %}
+{% block title %}
+  Register   
+{% endblock %} 
 {% block body %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
     <h1 class="text-2xl m-10">Register User</h1>
     <div class="container py-5">
-        <form method="post" class="bg-white shadow-md m-10 w-2/5 rounded px-8 pt-6 pb-8 mb-4" action="{% url 'register' %}">
+        <form method="post" class="bg-white shadow-md m-10 w-2/5 rounded px-8 pt-6 pb-8 mb-4" action="{% url 'register' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-2">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="">Email</label>
@@ -21,10 +16,6 @@
                 <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10">{{ user_form.username }} {{ user_form.username.errors }}</div>
             </div>
             <div class="mb-2">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="">Firstname</label>
-                <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10">{{ user_form.first_name }} {{ user_form.first_name.errors }}</div>
-            </div>
-            <div class="mb-2">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="">Password</label>
                 <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10">{{ user_form.password }} {{ user_form.password.errors }}</div>
             </div>
@@ -32,27 +23,37 @@
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="">Confirm Password</label>
                 <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10">{{ user_form.password2 }} {{ user_form.password2.errors }}</div>
             </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="">Profile Picture</label>
+                <div class="shadow text-gray-700 appearance-none border rounded py-2 px-3 mr-10">{{ profile_form.photo }} {{ profile_form.photo.errors }}</div>
+            </div>
             <button class="text-white bg-green-500 px-5 py-2" type="submit">Register</button>
         </form>
-        
         <p class="px-10 py-10"><a class="text-indigo-500" href="{% url 'password_reset' %}">
             Forgot password? Click here to reset
         </a></p>
+        {% if user_form.errors or profile_form.errors %}
+            <div class="errors">
+                {% for field in user_form %}
+                    {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+                {% for field in profile_form %}
+                    {% if field.errors %}
+                        <ul>
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 
-{% if user_form.errors %}
-    <div class="errors">
-        {% for field in user_form %}
-            {% if field.errors %}
-                <ul>
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endfor %}
-    </div>
-{% endif %}
-    </div>
-</body>
-</html>
 {% endblock %}

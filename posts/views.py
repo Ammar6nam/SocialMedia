@@ -6,6 +6,8 @@ from .models import Post
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from posts import forms as PostEditForm
+from .models import Message
+from .forms import MessageForm
 
 @login_required
 def post_create(request):
@@ -118,3 +120,24 @@ def like_post(request):
         else:
             return JsonResponse({'error': 'Invalid post ID!'})
     return JsonResponse({'error': 'Invalid request!'})
+
+
+def post_feed(request):
+    posts = Post.objects.all()
+    for post in posts:
+        post.absolute_url = request.build_absolute_uri(post.get_absolute_url())
+    return render(request, 'posts/feed.html', {'posts': posts})
+
+@login_required
+def send_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.save()
+            form.save_m2m()  # Save many-to-many relationships (recipients)
+            return redirect('inbox')  # Redirect to inbox or another page
+    else:
+        form = MessageForm()
+    return render(request, 'messages/compose.html', {'form': form})
