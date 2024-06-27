@@ -1,22 +1,104 @@
-{% extends 'users/base.html' %}
+{% extends "users/base.html" %}
+{% load static %}
 {% block title %}
-    About Admins     
+         Our team!       
 {% endblock %} 
-<link rel="stylesheet" href="{% static 'users/styles.css' %}">
-<link rel="stylesheet" href="{% static 'users/style.css' %}">{% block body %}
-<div class="container">
-    <h1>About Us</h1>
-    <div class="admin-profile">
-        <div class="admin">
-            <img src="{% static 'users/images/Ammar.jpg' %}" alt="Admin 1">
-            <h2>Mhd Ammar Nammour</h2>
-            <p>Developer Engineer</p>
-        </div>
-        <div class="admin">
-            <img src="{% static 'users/images/Daniel.jpg' %}" alt="Admin 2">
-            <h2>Daniel Ziebart</h2>
-            <p>Python backend developer</p>
+
+
+
+{% block body %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* Paste your CSS styles here inline for testing */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-section {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .admin-profile {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .admin {
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .admin:hover {
+            transform: translateY(-5px);
+        }
+
+        .admin img {
+            width: 128px;
+            height: 128px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin h2 {
+            font-size: 1.8rem;
+            margin-top: 15px;
+            color: #333;
+        }
+
+        .admin p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="about-section">
+            <h1>About Us</h1>
+            <div class="admin-profile">
+                <div class="admin">
+                    <img src="{% static 'users/images/Ammar.jpeg' %}" alt="Mhd Ammar Nammour">
+                    <h2>Mhd Ammar Nammour</h2>
+                    <p>Developer Engineer</p>
+                </div>
+                <div class="admin">
+                    <img src="{% static 'users/images/Daniel.jpeg' %}" alt="Daniel Ziebart">
+                    <h2>Daniel Ziebart</h2>
+                    <p>Python Backend Developer</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-{% endblock %} 
+
+{% endblock %}
